@@ -83,5 +83,6 @@ if __name__ == '__main__':
 
         if e % SAVE_TRAINING_FREQUENCY == 0:
             agent.save('OpenAI-GYM-CarRacing-DQN/save/trial_{}.h5'.format(e))
+            agent.upload('OpenAI-GYM-CarRacing-DQN/save/trial_{}.h5'.format(e),"rl-lambda-train")
 
     env.close()
