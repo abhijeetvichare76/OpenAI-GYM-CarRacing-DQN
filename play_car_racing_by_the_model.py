@@ -13,7 +13,7 @@ if __name__ == '__main__':
     train_model = args.model
     play_episodes = args.episodes
 
-    env = gym.make('CarRacing-v0')
+    env = gym.make('CarRacing-v2')
     agent = CarRacingDQNAgent(epsilon=0) # Set epsilon to 0 to ensure all actions are instructed by the agent
     agent.load(train_model)
 

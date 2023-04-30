@@ -55,7 +55,7 @@ class CarRacingDQNAgent:
 
     def act(self, state):
         if np.random.rand() > self.epsilon:
-            act_values = self.model.predict(np.expand_dims(state, axis=0))
+            act_values = self.model.predict(np.expand_dims(state, axis=0),verbose = 0)
             action_index = np.argmax(act_values[0])
         else:
             action_index = random.randrange(len(self.action_space))
@@ -66,11 +66,11 @@ class CarRacingDQNAgent:
         train_state = []
         train_target = []
         for state, action_index, reward, next_state, done in minibatch:
-            target = self.model.predict(np.expand_dims(state, axis=0))[0]
+            target = self.model.predict(np.expand_dims(state, axis=0),verbose = 0)[0]
             if done:
                 target[action_index] = reward
             else:
-                t = self.target_model.predict(np.expand_dims(next_state, axis=0))[0]
+                t = self.target_model.predict(np.expand_dims(next_state, axis=0),verbose = 0)[0]
                 target[action_index] = reward + self.gamma * np.amax(t)
             train_state.append(state)
             train_target.append(target)

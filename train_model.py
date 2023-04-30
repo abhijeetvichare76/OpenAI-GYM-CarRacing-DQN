@@ -5,13 +5,14 @@ from CarRacingDQNAgent import CarRacingDQNAgent
 from common_functions import process_state_image
 from common_functions import generate_state_frame_stack_from_queue
 
-RENDER                        = True
-STARTING_EPISODE              = 1
+RENDER                        = False
+STARTING_EPISODE              = 601
 ENDING_EPISODE                = 1000
 SKIP_FRAMES                   = 2
 TRAINING_BATCH_SIZE           = 64
 SAVE_TRAINING_FREQUENCY       = 25
 UPDATE_TARGET_MODEL_FREQUENCY = 5
+EPSILON                       = 0.1
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Training a DQN agent to play CarRacing.')
@@ -21,8 +22,9 @@ if __name__ == '__main__':
     parser.add_argument('-p', '--epsilon', type=float, default=1.0, help='The starting epsilon of the agent, default to 1.0.')
     args = parser.parse_args()
 
-    env = gym.make('CarRacing-v0')
-    agent = CarRacingDQNAgent(epsilon=args.epsilon)
+    env = gym.make('CarRacing-v2')
+    agent = CarRacingDQNAgent(epsilon=EPSILON)
+    model = agent.load("OpenAI-GYM-CarRacing-DQN/save/trial_600.h5")
     if args.model:
         agent.load(args.model)
     if args.start:
@@ -80,6 +82,6 @@ if __name__ == '__main__':
             agent.update_target_model()
 
         if e % SAVE_TRAINING_FREQUENCY == 0:
-            agent.save('./save/trial_{}.h5'.format(e))
+            agent.save('OpenAI-GYM-CarRacing-DQN/save/trial_{}.h5'.format(e))
 
     env.close()
