@@ -6,13 +6,13 @@ from common_functions import process_state_image
 from common_functions import generate_state_frame_stack_from_queue
 
 RENDER                        = False
-STARTING_EPISODE              = 601
+STARTING_EPISODE              = 1
 ENDING_EPISODE                = 1000
 SKIP_FRAMES                   = 2
-TRAINING_BATCH_SIZE           = 64
+TRAINING_BATCH_SIZE           = 32
 SAVE_TRAINING_FREQUENCY       = 25
 UPDATE_TARGET_MODEL_FREQUENCY = 5
-EPSILON                       = 0.1
+EPSILON                       = 1.0
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Training a DQN agent to play CarRacing.')
@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     env = gym.make('CarRacing-v2')
     agent = CarRacingDQNAgent(epsilon=EPSILON)
-    model = agent.load("OpenAI-GYM-CarRacing-DQN/save/trial_600.h5")
+    # model = agent.load("OpenAI-GYM-CarRacing-DQN/save/trial_600.h5")
     if args.model:
         agent.load(args.model)
     if args.start:
@@ -72,7 +72,7 @@ if __name__ == '__main__':
             agent.memorize(current_state_frame_stack, action, reward, next_state_frame_stack, done)
 
             if done or negative_reward_counter >= 25 or total_reward < 0:
-                print('Episode: {}/{}, Scores(Time Frames): {}, Total Rewards(adjusted): {:.2}, Epsilon: {:.2}'.format(e, ENDING_EPISODE, time_frame_counter, float(total_reward), float(agent.epsilon)))
+                print('Episode: {}/{}, Scores(Time Frames): {}, Total Rewards(adjusted): {}, Epsilon: {:.2}'.format(e, ENDING_EPISODE, time_frame_counter, round(float(total_reward),2), float(agent.epsilon)))
                 break
             if len(agent.memory) > TRAINING_BATCH_SIZE:
                 agent.replay(TRAINING_BATCH_SIZE)
@@ -82,7 +82,7 @@ if __name__ == '__main__':
             agent.update_target_model()
 
         if e % SAVE_TRAINING_FREQUENCY == 0:
-            agent.save('OpenAI-GYM-CarRacing-DQN/save/trial_{}.h5'.format(e))
-            agent.upload('OpenAI-GYM-CarRacing-DQN/save/trial_{}.h5'.format(e),"rl-lambda-train")
+            agent.save('OpenAI-GYM-CarRacing-DQN/save/trial_resize_{}.h5'.format(e))
+            # agent.upload('OpenAI-GYM-CarRacing-DQN/save/trial_resize_{}.h5'.format(e),"rl-lambda-train")
 
     env.close()

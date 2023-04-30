@@ -2,8 +2,8 @@ import random
 import numpy as np
 from collections import deque
 from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
-from tensorflow.keras.optimizers import Adam
+from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Input, Resizing
+from tensorflow.keras.optimizers.legacy import Adam
 import logging
 import boto3
 from botocore.exceptions import ClientError
@@ -41,14 +41,16 @@ class CarRacingDQNAgent:
     def build_model(self):
         # Neural Net for Deep-Q learning Model
         model = Sequential()
-        model.add(Conv2D(filters=6, kernel_size=(7, 7), strides=3, activation='relu', input_shape=(96, 96, self.frame_stack_num)))
+        model.add(Input(shape=(96, 96, self.frame_stack_num)))
+        model.add(Resizing(32, 32))
+        model.add(Conv2D(filters=3, kernel_size=(4, 4), strides=3, activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Conv2D(filters=12, kernel_size=(4, 4), activation='relu'))
+        model.add(Conv2D(filters=6, kernel_size=(2, 2), activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Flatten())
-        model.add(Dense(216, activation='relu'))
+        model.add(Dense(108, activation='relu'))
         model.add(Dense(len(self.action_space), activation=None))
-        model.compile(loss='mean_squared_error', optimizer=Adam(lr=self.learning_rate, epsilon=1e-7))
+        model.compile(loss='mean_squared_error', optimizer=Adam(learning_rate=self.learning_rate, epsilon=1e-7))
         return model
 
     def update_target_model(self):
