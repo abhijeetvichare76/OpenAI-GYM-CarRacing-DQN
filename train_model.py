@@ -4,6 +4,7 @@ from collections import deque
 from CarRacingDQNAgent import CarRacingDQNAgent
 from common_functions import process_state_image
 from common_functions import generate_state_frame_stack_from_queue
+import time
 
 RENDER                        = False
 STARTING_EPISODE              = 1
@@ -31,8 +32,9 @@ if __name__ == '__main__':
         STARTING_EPISODE = args.start
     if args.end:
         ENDING_EPISODE = args.end
-
+    
     for e in range(STARTING_EPISODE, ENDING_EPISODE+1):
+        time1 = time.time()
         init_state = env.reset()
         init_state = process_state_image(init_state)
 
@@ -84,5 +86,6 @@ if __name__ == '__main__':
         if e % SAVE_TRAINING_FREQUENCY == 0:
             agent.save('OpenAI-GYM-CarRacing-DQN/save/trial_resize_{}.h5'.format(e))
             # agent.upload('OpenAI-GYM-CarRacing-DQN/save/trial_resize_{}.h5'.format(e),"rl-lambda-train")
+        print("episode time: ", time.time() - time1)
 
     env.close()
