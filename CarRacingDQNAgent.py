@@ -19,7 +19,7 @@ class CarRacingDQNAgent:
             (-1, 0,   0), (0, 0,   0), (1, 0,   0)
         ],
         frame_stack_num = 3,
-        memory_size     = 1000,
+        memory_size     = 500,
         gamma           = 0.95,  # discount rate
         epsilon         = 1.0,   # exploration rate
         epsilon_min     = 0.1,
@@ -43,9 +43,9 @@ class CarRacingDQNAgent:
         model = Sequential()
         model.add(Input(shape=(16, 16, self.frame_stack_num)))
         # model.add(Resizing(32, 32))
-        model.add(Conv2D(filters=3, kernel_size=(4, 4), strides=3, activation='relu'))
+        model.add(Conv2D(filters=3, kernel_size=(2, 2), strides=1, activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
-        model.add(Conv2D(filters=6, kernel_size=(2, 2), activation='relu'))
+        model.add(Conv2D(filters=6, kernel_size=(2, 1), activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Flatten())
         model.add(Dense(108, activation='relu'))
