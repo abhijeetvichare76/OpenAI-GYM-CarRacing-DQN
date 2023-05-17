@@ -15,7 +15,7 @@ class CarRacingDQNAgent:
             (-1, 0,   0), (0, 0,   0), (1, 0,   0)
         ],
         frame_stack_num = 3,
-        memory_size     = 5000,
+        memory_size     = 500,
         gamma           = 0.95,  # discount rate
         epsilon         = 1.0,   # exploration rate
         epsilon_min     = 0.1,
@@ -37,8 +37,8 @@ class CarRacingDQNAgent:
     def build_model(self):
         # Neural Net for Deep-Q learning Model
         model = Sequential()
-        model.add(Conv2D(filters=6, kernel_size=(7, 7), strides=3, activation='relu', input_shape=(96, 96, self.frame_stack_num)))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(Conv2D(filters=6, kernel_size=(7, 7), strides=3, activation='relu', input_shape=(32, 32, self.frame_stack_num)))
+        # model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Conv2D(filters=12, kernel_size=(4, 4), activation='relu'))
         model.add(MaxPooling2D(pool_size=(2, 2)))
         model.add(Flatten())
